@@ -39,7 +39,7 @@ app.use((req, res, next) => {
     }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'math')));
 
 //ログイン済み？
 app.get('/login/if', async (req, res) => {
