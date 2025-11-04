@@ -1,21 +1,22 @@
 import express from 'express';
 import http from 'node:http';
-import createBareServer from "educational-br-sr";
+import createBareServer from "@tomphttp/bare-server-node";
 import path from 'node:path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import ejs from 'ejs';
+import axios from 'axios';
+import miniget from 'miniget';
 import bodyParser from 'body-parser';
 
 const __dirname = process.cwd();
 const server = http.createServer();
 const app = express(server);
-const bareServer = createBareServer('/outerspace/');
+const bareServer = createBareServer('/bare/')
 const PORT = 8080;
-
 const limit = process.env.LIMIT || 50;
-const user_agent = process.env.USER_AGENT || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36";
-
+const user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15";
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
@@ -39,7 +40,7 @@ app.use((req, res, next) => {
     }
 });
 
-app.use(express.static(path.join(__dirname, 'math')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 //ログイン済み？
 app.get('/login/if', async (req, res) => {
@@ -93,32 +94,19 @@ function parseCookies(request) {
 }
 
 const routes = [
-    { path: '/', file: 'index.html' },
+  { path: '/', file: 'index.html' },
   { path: '/news', file: 'apps.html' },
   { path: '/send', file: 'send.html' },
   { path: '/local-news', file: 'tabs.html' },
   { path: '/tools', file: 'tool.html' },
   { path: '/image-galleries', file: 'go.html' },
-  { path: '/help', file: 'help.html' }, 
-    ]
+]
 
-app.get('/edu/*', cors({ origin: false }), async (req, res, next) => {
-  try {
-    const reqTarget = `https://raw.githubusercontent.com/InterstellarNetwork/Interstellar-Assets/main/${req.params[0]}`;
-    const asset = await fetch(reqTarget);
-    
-    if (asset.ok) {
-      const data = await asset.arrayBuffer();
-      res.end(Buffer.from(data));
-    } else {
-      next();
-    }
-  } catch (error) {
-    console.error('Error fetching:', error);
-    next(error);
-  }
+app.get('/image-galleries', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'go.html'));
 });
 
+// Existing code
 //リダイレクト
 app.get('/redirect', (req, res) => {
   const subp = req.query.p;
