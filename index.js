@@ -93,9 +93,14 @@ function parseCookies(request) {
 }
 
 const routes = [
-  { path: '/', file: 'index.html' },
-  { path: '/image-galleries', file: 'go.html' }
-];
+    { path: '/', file: 'index.html' },
+  { path: '/news', file: 'apps.html' },
+  { path: '/send', file: 'send.html' },
+  { path: '/local-news', file: 'tabs.html' },
+  { path: '/tools', file: 'tool.html' },
+  { path: '/image-galleries', file: 'go.html' },
+  { path: '/help', file: 'help.html' }, 
+    ]
 
 app.get('/edu/*', cors({ origin: false }), async (req, res, next) => {
   try {
